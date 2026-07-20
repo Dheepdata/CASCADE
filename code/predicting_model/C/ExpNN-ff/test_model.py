@@ -94,12 +94,7 @@ atom_means = atom_means.reindex(np.arange(preprocessor.atom_classes)).fillna(0)
 batch_size = 32
 train_sequence = RBFSequence(input_data['inputs_train'], y_train, batch_size)
 valid_sequence = RBFSequence(input_data['inputs_valid'], y_valid, batch_size)
-test_sequence = RBFSequence(
-    input_data['inputs_test'],
-    y_test,
-    batch_size,
-    shuffle=False
-)
+test_sequence = RBFSequence(input_data['inputs_test'],y_test,batch_size,shuffle=False)
 
 
 # Raw (integer) graph inputs
@@ -195,7 +190,6 @@ model.compile(
 model.summary()
 
 print("Evaluating on test set...")
-print("Evaluating on test set...")
 
 loss = model.evaluate_generator(test_sequence)
 
@@ -205,17 +199,6 @@ print("Test MAE:", loss)
 predictions = model.predict_generator(test_sequence)
 
 actual = np.concatenate(y_test)
-print("Type of y_test:", type(y_test))
-print("Length of y_test:", len(y_test))
-print("Type of first element:", type(y_test[0]))
-print("Shape of first element:", np.asarray(y_test[0]).shape)
-print("Shifts in first molecule:", y_test[0][:])
-
-print("Predictions:", predictions[:].flatten())
-print("Actual values:", np.concatenate(y_test)[:])
-print("Manual MAE:", mean_absolute_error(actual, predictions.flatten()))
-
-print("Prediction shape:", predictions.shape)
 
 
 pred_df = pd.DataFrame({
@@ -227,5 +210,3 @@ pred_df["Error"] = pred_df["Predicted"] - pred_df["Actual"]
 pred_df["Absolute_Error"] = pred_df["Error"].abs()
 
 pred_df.to_csv("test_predictions.csv", index=False)
-
-print(pred_df.head())
