@@ -127,8 +127,10 @@ def predict_NMR_C(smiles, model):
     mols = [Chem.AddHs(m, addCoords=True) for m in mols]
 
 
-    with open(os.path.join('cascade', 'preprocessor.p'), 'rb') as ft:
-        preprocessor = pickle.load(ft)['preprocessor']
+    preprocessor_path = os.path.join(os.path.dirname(__file__), "preprocessor.p")
+
+    with open(preprocessor_path, "rb") as ft:
+        preprocessor = pickle.load(ft)["preprocessor"]
 
     inputs, df, mols = preprocess_C(mols, preprocessor, True)
 
@@ -165,7 +167,7 @@ def predict_NMR_C(smiles, model):
 def preprocess_H(mols, preprocessor, keep_all_cf=False):
     mols_id = []
     confs_id = []
-    mols_conf = []
+    mols_conf = [] 
     for i,m in enumerate(mols):
         try:
             mol,ids,nr = genConf(m, rms=-1, nc=200, efilter=10.0, rmspost=0.5)
